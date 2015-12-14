@@ -6,8 +6,16 @@ public enum SliderType
     Vertical
 }
 
+public enum KnobType
+{
+    Snap,
+    Fluid
+}
+
 public class Slider : BaseControl
 {
+    public int SnapUnit;
+    public KnobType KnobType;
     public SliderType Type;
     public float Size;
     public float BorderSize;
@@ -20,6 +28,9 @@ public class Slider : BaseControl
     public Color BackgroundColor;
     public Color KnobColor;
 
+    public float MinValue;
+    public float MaxValue;
+
     public bool ShowFiller;
     public bool ShowKnob;
     public bool ShowBackground;
@@ -31,6 +42,9 @@ public class Slider : BaseControl
     private GameObject Knob;
     private float MaxExtent;
     private BoxCollider2D BoxCollider;
+    private int MaxSnapSize = 4;
+    private float Min, Max;
+    private float NormalizedValue;
 
     void Start () {
         FindGameObjects();
@@ -55,9 +69,9 @@ public class Slider : BaseControl
             pos -= Offset;
 
             if (Type == SliderType.Horizontal)
-                SetValue(pos.x); 
+                SetKnobPosition(pos.x); 
             else if (Type == SliderType.Vertical)
-                SetValue(pos.y);
+                SetKnobPosition(pos.y);
         }
 
 	}
@@ -75,8 +89,8 @@ public class Slider : BaseControl
             FindGameObjects();
         }
 #endif
-        
-        float min = 0, max = 0;
+
+        SnapUnit = Mathf.Clamp(SnapUnit, 0, MaxSnapSize);
         Background.transform.localScale = new Vector3(Size, 4, 1);
 
         if (Type == SliderType.Horizontal)
@@ -89,17 +103,11 @@ public class Slider : BaseControl
             MaxExtent = extent / 2f;
                         
             float val = EdgeSprite.texture.width / 2f / CalculatePixelUnits(EdgeSprite);
-            min = Background.GetComponent<SpriteRenderer>().bounds.min.x - val / 2f;
-            max = Background.GetComponent<SpriteRenderer>().bounds.max.x + val / 2f;
+            Min = Background.GetComponent<SpriteRenderer>().bounds.min.x - val / 2f;
+            Max = Background.GetComponent<SpriteRenderer>().bounds.max.x + val / 2f;
 
-            EdgeLeft.transform.position = new Vector2(min, transform.position.y);
-            EdgeRight.transform.position = new Vector2(max, transform.position.y);
-
-            float fillValue = Value * MaxExtent * 2;
-            Filler.transform.position = new Vector2(min + fillValue/2f, transform.position.y); 
-            Filler.transform.localScale = new Vector2(+fillValue, FillerSize);
-
-            Value = (Knob.transform.localPosition.x + MaxExtent) / MaxExtent / 2f;
+            EdgeLeft.transform.position = new Vector2(Min, transform.position.y);
+            EdgeRight.transform.position = new Vector2(Max, transform.position.y);
         }
         else if (Type == SliderType.Vertical)
         {
@@ -111,17 +119,11 @@ public class Slider : BaseControl
             MaxExtent = extent / 2f;
             
             float val = EdgeSprite.texture.width / 2f / CalculatePixelUnits(EdgeSprite);
-            min = Background.GetComponent<SpriteRenderer>().bounds.min.y - val / 2f;
-            max = Background.GetComponent<SpriteRenderer>().bounds.max.y + val / 2f;
+            Min = Background.GetComponent<SpriteRenderer>().bounds.min.y - val / 2f;
+            Max = Background.GetComponent<SpriteRenderer>().bounds.max.y + val / 2f;
 
-            EdgeLeft.transform.position = new Vector2(transform.position.x, min);
-            EdgeRight.transform.position = new Vector2(transform.position.x, max);
-
-            float fillValue = Value * MaxExtent * 2;
-            Filler.transform.position = new Vector2(transform.position.x, min + fillValue/2f);
-            Filler.transform.localScale = new Vector2(FillerSize, fillValue);
-            
-            Value = (Knob.transform.localPosition.y + MaxExtent) / MaxExtent / 2f;
+            EdgeLeft.transform.position = new Vector2(transform.position.x, Min);
+            EdgeRight.transform.position = new Vector2(transform.position.x, Max);            
         }
 
         Knob.transform.localScale = new Vector3(3.9f, 4 - BorderSize, 1);     
@@ -137,9 +139,7 @@ public class Slider : BaseControl
         EdgeLeft.GetComponent<SpriteRenderer>().color = BackgroundColor;
         EdgeRight.GetComponent<SpriteRenderer>().color = BackgroundColor;
         Knob.GetComponent<SpriteRenderer>().color = KnobColor;
-
-
-
+        
         if (!ShowBackground)
         {
             EdgeLeft.SetActive(false);
@@ -162,18 +162,70 @@ public class Slider : BaseControl
             Filler.SetActive(false);
         else
             Filler.SetActive(true);
+
+
+        SetValue(Value / (MaxValue - MinValue));
+    }
+
+    private void SetKnobPosition(float position)
+    {
+        if (Type == SliderType.Horizontal)
+        {
+            Knob.transform.localPosition = new Vector2(Mathf.Clamp(position, -MaxExtent, MaxExtent), 0);
+
+            NormalizedValue = (Knob.transform.localPosition.x + MaxExtent) / MaxExtent / 2f;
+            float fillValue = NormalizedValue * MaxExtent * 2;
+            Filler.transform.position = new Vector2(Min + fillValue / 2f, transform.position.y);
+            Filler.transform.localScale = new Vector2(fillValue, FillerSize);
+        }
+        else if (Type == SliderType.Vertical)
+        {
+            Knob.transform.localPosition = new Vector2(0, Mathf.Clamp(position, -MaxExtent, MaxExtent));
+
+            NormalizedValue = (Knob.transform.localPosition.y + MaxExtent) / MaxExtent / 2f;
+            float fillValue = NormalizedValue * MaxExtent * 2;
+            Filler.transform.position = new Vector2(transform.position.x, Min + fillValue / 2f);
+            Filler.transform.localScale = new Vector2(FillerSize, fillValue);
+        }
+
+        Value = NormalizedValue * (MaxValue - MinValue);
     }
 
     public void SetValue(float value)
     {
-        if (Type == SliderType.Horizontal)
-            Knob.transform.localPosition = new Vector2(Mathf.Clamp(value, -MaxExtent, MaxExtent), 0);
-        else if (Type == SliderType.Vertical)
-            Knob.transform.localPosition = new Vector2(0, Mathf.Clamp(value, -MaxExtent, MaxExtent));
+        if (KnobType == KnobType.Snap)
+        {
+            value = (int)value;
+            value -= (int)(value % SnapUnit);
+        }
+                
+        NormalizedValue = value;
+        NormalizedValue = Mathf.Clamp(value, 0, 1);
 
+        float fillValue = NormalizedValue * MaxExtent * 2;
+        float knobValue = (NormalizedValue-0.5f) * Size * 2;
+
+
+        if (Type == SliderType.Horizontal)
+        {
+            Filler.transform.position = new Vector2(Min + fillValue / 2f, transform.position.y);
+            Filler.transform.localScale = new Vector2(fillValue, FillerSize);
+            Knob.transform.localPosition = new Vector2(Mathf.Clamp(knobValue, -MaxExtent, MaxExtent), 0);
+
+        }
+        else if (Type == SliderType.Vertical)
+        {
+            Filler.transform.position = new Vector2(transform.position.x, Min + fillValue / 2f);
+            Filler.transform.localScale = new Vector2(FillerSize, fillValue);
+            Knob.transform.localPosition = new Vector2(0,Mathf.Clamp(knobValue, -MaxExtent, MaxExtent));
+        }
+
+        Value = NormalizedValue * (MaxValue - MinValue);
+        
         BoxCollider.offset = Knob.transform.localPosition;        
         BoxCollider.size = Knob.transform.localScale;
     }
+    
 
     protected float CalculatePixelUnits(Sprite sprite)
     {
