@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Button : MonoBehaviour
+public class Button : BaseControl
 {
     public Color PressedColor;
     public Color Color;
@@ -77,14 +77,19 @@ public class Button : MonoBehaviour
         return true;
     }
 
-    public void Reset()
+    public override void Reset()
     {
         Pressed = false;
     }
 
-    public void Press()
+    public override void Select()
     {
         Pressed = true;
+    }
+
+    public override void Submit()
+    {
+
     }
 
 }
