@@ -1,9 +1,12 @@
 fileFormatVersion: 2
-guid: c2f4e0fbf69410a4185cc97319286b81
-timeCreated: 1449935784
+guid: a013bbc51c4ac534da36b1f065fba857
+timeCreated: 1450110682
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Slider_0
+    21300002: Slider_1
+    21300004: Slider_2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,18 +41,48 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 1
+  spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: Slider_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 3
+        width: 53
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Slider_1
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 9
+        width: 93
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Slider_2
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 3
+        width: 210
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
   assetBundleName: 
