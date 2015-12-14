@@ -36,10 +36,11 @@ public class ControlManager {
 
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].collider.gameObject.tag == "Button" || hits[i].collider.gameObject.tag == "Slider")
+                BaseControl control = CheckCollider(hits[i].collider);
+                if (control != null)
                 {
-                    SelectedControl = hits[i].collider.gameObject.GetComponent<Button>();
-                    SelectedControl.Select();
+                    SelectedControl = hits[i].collider.gameObject.GetComponent<BaseControl>();
+                    SelectedControl.Select(pos);
                 }                
             }
         }
@@ -65,6 +66,8 @@ public class ControlManager {
             }
 
         }
+
+
     }
 
 

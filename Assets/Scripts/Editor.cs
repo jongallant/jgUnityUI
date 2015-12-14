@@ -1,4 +1,5 @@
-﻿#if UNITY_EDITOR
+﻿// Class is used to provide a live edit of control properties, in Edit mode
+#if UNITY_EDITOR
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -6,35 +7,43 @@ using System.Collections.Generic;
 [ExecuteInEditMode]
 public class Editor : MonoBehaviour
 {
-    public List<Button> Buttons = new List<Button>();
+    public List<BaseControl> Controls = new List<BaseControl>();
 
     void Update()
     {
-        RefreshButtons();
+        RefreshControls();
 
-        for (int i = 0; i < Buttons.Count; i++)
+        for (int i = 0; i < Controls.Count; i++)
         {
-            if (Buttons[i] == null)
+            if (Controls[i] == null)
             {
-                Buttons.RemoveAt(i);
+                Controls.RemoveAt(i);
                 i--;
             }
             else
             {
-                Buttons[i].Refresh();
+                Controls[i].Refresh();
             }
         }        
     }
     
-    private void RefreshButtons()
+    private void RefreshControls()
     {
-        Buttons.Clear();
+        Controls.Clear();
         GameObject[] temp = GameObject.FindGameObjectsWithTag("Button");
         for (int i = 0; i < temp.Length; i++)
         {
             Button button = temp[i].GetComponent<Button>();
-            if (!Buttons.Contains(button))
-                Buttons.Add(button);
+            if (!Controls.Contains(button))
+                Controls.Add(button);
+        }
+
+        temp = GameObject.FindGameObjectsWithTag("Slider");
+        for (int i = 0; i < temp.Length; i++)
+        {
+            Slider slider = temp[i].GetComponent<Slider>();
+            if (!Controls.Contains(slider))
+                Controls.Add(slider);
         }
     }
 

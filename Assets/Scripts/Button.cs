@@ -17,20 +17,9 @@ public class Button : BaseControl
     protected GameObject TextGO;
     protected BoxCollider2D BoxCollider;
 
-    bool Pressed;
-        
-#if UNITY_EDITOR
-    Editor Editor;
-#endif
-
     public void Start()
     {
         FindGameObjects();
-
-#if UNITY_EDITOR
-        Editor = GameObject.Find("Editor").GetComponent<Editor>();
-#endif
-
         Refresh();
     }
 
@@ -42,7 +31,7 @@ public class Button : BaseControl
         BoxCollider = GetComponent<BoxCollider2D>();
     }
     
-    public virtual bool Refresh()
+    public override void Refresh()
     {
 
 #if UNITY_EDITOR
@@ -51,6 +40,7 @@ public class Button : BaseControl
             FindGameObjects();
         }
 #endif
+
 
         Border.transform.localScale = new Vector3(Width, Height, 1);
         Background.transform.localScale = new Vector3(Width - BorderSize, Height - BorderSize, 1);
@@ -74,17 +64,7 @@ public class Button : BaseControl
 
        BoxCollider.size = new Vector2(Width, Height);
 
-        return true;
-    }
-
-    public override void Reset()
-    {
-        Pressed = false;
-    }
-
-    public override void Select()
-    {
-        Pressed = true;
+        Offset = transform.position;
     }
 
     public override void Submit()
