@@ -371,7 +371,7 @@ MonoBehaviour:
   KnobSprite: {fileID: 21300002, guid: a013bbc51c4ac534da36b1f065fba857, type: 3}
   BackgroundSprite: {fileID: 21300004, guid: a013bbc51c4ac534da36b1f065fba857, type: 3}
   EdgeSprite: {fileID: 21300000, guid: a013bbc51c4ac534da36b1f065fba857, type: 3}
-  Value: 44.5800018
+  Value: 59.220005
   FillerSize: .829999983
   FillerColor: {r: .79411763, g: .576339304, b: .186851189, a: 1}
   BackgroundColor: {r: .358023375, g: .518837273, b: .632352948, a: 1}
@@ -391,7 +391,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: -1.3333199}
+  m_Offset: {x: 0, y: 2.268121}
   serializedVersion: 2
   m_Size: {x: 3.9000001, y: 4}
 --- !u!114 &1321503305 stripped
@@ -449,7 +449,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1338122151}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.3333199, z: 0}
+  m_LocalPosition: {x: 0, y: 2.268121, z: 0}
   m_LocalScale: {x: 3.9000001, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 673062539}
@@ -573,8 +573,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1807684298}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -8.12999439, z: 0}
-  m_LocalScale: {x: .829999983, y: 11.5150156, z: 0}
+  m_LocalPosition: {x: 0, y: -5.66332245, z: 0}
+  m_LocalScale: {x: .829999983, y: 16.4483585, z: 0}
   m_Children: []
   m_Father: {fileID: 673062539}
   m_RootOrder: 4

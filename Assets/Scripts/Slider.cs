@@ -202,10 +202,9 @@ public class Slider : BaseControl
         NormalizedValue = value;
         NormalizedValue = Mathf.Clamp(value, 0, 1);
 
-        float fillValue = NormalizedValue * MaxExtent * 2;
+        float fillValue = NormalizedValue * (Max - Min);
         float knobValue = (NormalizedValue-0.5f) * Size * 2;
-
-
+        
         if (Type == SliderType.Horizontal)
         {
             Filler.transform.position = new Vector2(Min + fillValue / 2f, transform.position.y);
