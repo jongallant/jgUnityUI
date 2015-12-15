@@ -172,20 +172,12 @@ public class Slider : BaseControl
         if (Type == SliderType.Horizontal)
         {
             Knob.transform.localPosition = new Vector2(Mathf.Clamp(position, -MaxExtent, MaxExtent), 0);
-
             NormalizedValue = (Knob.transform.localPosition.x + MaxExtent) / MaxExtent / 2f;
-            float fillValue = NormalizedValue * MaxExtent * 2;
-            Filler.transform.position = new Vector2(Min + fillValue / 2f, transform.position.y);
-            Filler.transform.localScale = new Vector2(fillValue, FillerSize);
         }
         else if (Type == SliderType.Vertical)
         {
             Knob.transform.localPosition = new Vector2(0, Mathf.Clamp(position, -MaxExtent, MaxExtent));
-
             NormalizedValue = (Knob.transform.localPosition.y + MaxExtent) / MaxExtent / 2f;
-            float fillValue = NormalizedValue * MaxExtent * 2;
-            Filler.transform.position = new Vector2(transform.position.x, Min + fillValue / 2f);
-            Filler.transform.localScale = new Vector2(FillerSize, fillValue);
         }
 
         Value = NormalizedValue * (MaxValue - MinValue);
@@ -193,31 +185,40 @@ public class Slider : BaseControl
 
     public void SetValue(float value)
     {
-        if (KnobType == KnobType.Snap)
-        {
-            value = (int)value;
-            value -= (int)(value % SnapUnit);
-        }
-                
         NormalizedValue = value;
         NormalizedValue = Mathf.Clamp(value, 0, 1);
 
         float fillValue = NormalizedValue * (Max - Min);
-        float knobValue = (NormalizedValue-0.5f) * Size * 2;
+        float knobValue = (NormalizedValue - 0.5f) * Size * 2f;
+
+        if (KnobType == KnobType.Snap)
+        {            
+            knobValue = (int)knobValue;
+            knobValue -= (int)(knobValue % SnapUnit);
+        }
+
+        knobValue = Mathf.Clamp(knobValue, -MaxExtent, MaxExtent);
         
         if (Type == SliderType.Horizontal)
-        {
-            Filler.transform.position = new Vector2(Min + fillValue / 2f, transform.position.y);
-            Filler.transform.localScale = new Vector2(fillValue, FillerSize);
-            Knob.transform.localPosition = new Vector2(Mathf.Clamp(knobValue, -MaxExtent, MaxExtent), 0);
+        {            
+            if (Knob.transform.localPosition.x != knobValue)
+            {                
+                Knob.transform.localPosition = new Vector2(knobValue, 0);
 
+                Filler.transform.position = new Vector2(Min + fillValue / 2f, transform.position.y);
+                Filler.transform.localScale = new Vector2(fillValue, FillerSize);
+            }
         }
         else if (Type == SliderType.Vertical)
         {
-            Filler.transform.position = new Vector2(transform.position.x, Min + fillValue / 2f);
-            Filler.transform.localScale = new Vector2(FillerSize, fillValue);
-            Knob.transform.localPosition = new Vector2(0,Mathf.Clamp(knobValue, -MaxExtent, MaxExtent));
-        }
+            if (Knob.transform.localPosition.y != knobValue)
+            {
+                Knob.transform.localPosition = new Vector2(0, knobValue);
+
+                Filler.transform.position = new Vector2(transform.position.x, Min + fillValue / 2f);
+                Filler.transform.localScale = new Vector2(FillerSize, fillValue);
+            }
+        }      
 
         Value = NormalizedValue * (MaxValue - MinValue);
         

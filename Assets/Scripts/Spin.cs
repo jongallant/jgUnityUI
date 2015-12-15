@@ -1,14 +1,10 @@
 ﻿using UnityEngine;
 
-public class Button : BaseControl
+public class Spin : BaseControl
 {
-    public delegate void SubmitAction();
-    public event SubmitAction OnSubmit;
-
-    public Sprite IconSprite;
-    public float IconSize;
-    public Color IconColor;
-
+    public bool ShowBorder;
+    public bool ShowBackground;
+    
     public Color PressedColor;
     public Color Color;
     public int Width;
@@ -19,12 +15,15 @@ public class Button : BaseControl
     public float TextSize;
     public Color TextColor;
 
-    protected GameObject Icon;
+    public string[] Items;
+    private int Index;
+
+    protected GameObject LeftButton;
+    protected GameObject RightButton;
     protected GameObject Background;
     protected GameObject Border;
     protected GameObject TextGO;
-    protected BoxCollider2D BoxCollider;
-
+        
     public void Start()
     {
         FindGameObjects();
@@ -33,11 +32,32 @@ public class Button : BaseControl
 
     private void FindGameObjects()
     {
-        Icon = transform.Find("Icon").gameObject;
+        LeftButton = transform.Find("LeftButton").gameObject;
+        RightButton = transform.Find("RightButton").gameObject;
         Border = transform.Find("Border").gameObject;
         Background = transform.Find("Background").gameObject;
         TextGO = transform.Find("Text").gameObject;
-        BoxCollider = GetComponent<BoxCollider2D>();
+
+        LeftButton.GetComponent<Button>().OnSubmit += Prev;
+        RightButton.GetComponent<Button>().OnSubmit += Next;
+    }
+
+    private void Next()
+    {
+        Index++;
+        if (Index > Items.Length - 1)
+            Index = 0;
+
+        TextGO.GetComponent<TextMesh>().text = Items[Index];
+    }
+
+    private void Prev()
+    {
+        Index--;
+        if (Index < 0)
+            Index = Items.Length - 1;
+
+        TextGO.GetComponent<TextMesh>().text = Items[Index];
     }
 
     public override void Refresh()
@@ -65,35 +85,25 @@ public class Button : BaseControl
         }
 
         TextGO.GetComponent<MeshRenderer>().sortingOrder = 10;
-        TextGO.GetComponent<TextMesh>().text = Text;
+        TextGO.GetComponent<TextMesh>().text = Items[Index];
         TextGO.GetComponent<TextMesh>().characterSize = TextSize;
         TextGO.GetComponent<TextMesh>().color = TextColor;
         TextGO.GetComponent<TextMesh>().font = Font;
+        
+        Border.SetActive(ShowBorder);
+        Background.SetActive(ShowBackground);
 
-        BoxCollider.size = new Vector2(Width, Height);
+        LeftButton.transform.localPosition = new Vector3(-Width / 2f - LeftButton.GetComponent<Button>().Width/2f, 0);
+        RightButton.transform.localPosition = new Vector3(Width / 2f + RightButton.GetComponent<Button>().Width/2f, 0);
 
         Offset = transform.position;
-
-        if (IconSprite != null)
-        {
-            Icon.SetActive(true);
-            Icon.GetComponent<SpriteRenderer>().sprite = IconSprite;
-            Icon.GetComponent<SpriteRenderer>().color = IconColor;
-            Icon.transform.localScale = new Vector2(IconSize, IconSize);
-        }
-        else
-        {
-            Icon.SetActive(false);
-        }
-
-
-
     }
 
     public override void Submit()
     {
-        OnSubmit();
+
     }
+    
 
 }
 

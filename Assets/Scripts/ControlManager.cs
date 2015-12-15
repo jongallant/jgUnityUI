@@ -8,6 +8,11 @@ public class ControlManager {
 
     public ControlManager()
     {
+        GetControls();
+    }
+
+    private void GetControls()
+    {
         Controls = new List<BaseControl>();
 
         GameObject[] temp = GameObject.FindGameObjectsWithTag("Button");
@@ -24,6 +29,22 @@ public class ControlManager {
             Slider slider = temp[i].GetComponent<Slider>();
             if (!Controls.Contains(slider))
                 Controls.Add(slider);
+        }
+
+        temp = GameObject.FindGameObjectsWithTag("Checkbox");
+        for (int i = 0; i < temp.Length; i++)
+        {
+            Checkbox checkbox = temp[i].GetComponent<Checkbox>();
+            if (!Controls.Contains(checkbox))
+                Controls.Add(checkbox);
+        }
+
+        temp = GameObject.FindGameObjectsWithTag("Spin");
+        for (int i = 0; i < temp.Length; i++)
+        {
+            Spin spin = temp[i].GetComponent<Spin>();
+            if (!Controls.Contains(spin))
+                Controls.Add(spin);
         }
     }
 
@@ -73,7 +94,7 @@ public class ControlManager {
 
     private BaseControl CheckCollider(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Button" || collider.gameObject.tag == "Slider")
+        if (collider.gameObject.tag == "Button" || collider.gameObject.tag == "Slider" || collider.gameObject.tag == "Checkbox" || collider.gameObject.tag == "Spin")
         {
             return collider.gameObject.GetComponent<BaseControl>();
         }

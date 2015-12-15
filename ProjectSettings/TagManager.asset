@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Button
   - Slider
+  - Checkbox
+  - Spin
   layers:
   - Default
   - TransparentFX

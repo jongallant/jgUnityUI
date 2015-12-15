@@ -30,6 +30,7 @@ public class Editor : MonoBehaviour
     private void RefreshControls()
     {
         Controls.Clear();
+
         GameObject[] temp = GameObject.FindGameObjectsWithTag("Button");
         for (int i = 0; i < temp.Length; i++)
         {
@@ -44,6 +45,22 @@ public class Editor : MonoBehaviour
             Slider slider = temp[i].GetComponent<Slider>();
             if (!Controls.Contains(slider))
                 Controls.Add(slider);
+        }
+
+        temp = GameObject.FindGameObjectsWithTag("Checkbox");
+        for (int i = 0; i < temp.Length; i++)
+        {
+            Checkbox checkbox = temp[i].GetComponent<Checkbox>();
+            if (!Controls.Contains(checkbox))
+                Controls.Add(checkbox);
+        }
+
+        temp = GameObject.FindGameObjectsWithTag("Spin");
+        for (int i = 0; i < temp.Length; i++)
+        {
+            Spin spin = temp[i].GetComponent<Spin>();
+            if (!Controls.Contains(spin))
+                Controls.Add(spin);
         }
     }
 
