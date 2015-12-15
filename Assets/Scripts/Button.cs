@@ -92,7 +92,8 @@ public class Button : BaseControl
 
     public override void Submit()
     {
-        OnSubmit();
+        if (OnSubmit != null)
+            OnSubmit();
     }
 
 }
